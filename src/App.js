@@ -1,20 +1,67 @@
-import React from 'react';
-import Hello from './Hello';
-import './App.css'
+import React, {useRef, useState} from 'react';
+import UserList from './UserList';
+import CreateUser from './CreateUser';
 
 function App(){
-  const name = 'react';
-  const style ={
-    backgroundColor: 'black',
-    color: 'aqua',
-    fontSize: 24,
-    padding: '1rem'
-  }
+  const [inputs, setInputs] = useState({
+    username: '',
+    email: ''
+  });
+
+  const {username, email} = inputs;
+
+  const onChange = (e) => {
+    const {name, value} = e.target;
+    setInputs({
+      ...inputs,
+      [name]: value
+    });
+  };
+
+  const [users, setUsers] = useState([
+    {
+      id: 1,
+      username: 'velpert',
+      email: 'public.velopert@gmail.com'
+    },
+    {
+      id: 2,
+      username: 'tester',
+      email: 'tester@example.com'
+    },
+    {
+      id: 3,
+      username: 'liz',
+      email: 'liz@example.com'
+    }
+  ]);
+
+  const nextId = useRef(2);
+  const onCreate = () =>{
+    const user ={
+      id: nextId.current,
+      username,
+      email
+    };
+    setUsers([...users, user]);
+
+    setInputs({
+      username: '',
+      email: ''
+    });
+
+    nextId.current += 1;
+  };
+
   return(
     <>
-      <Hello />
-      <div style={style}>{name}</div>
-      {/*<div className="gray-box"></div>*/}
+      <CreateUser 
+        username={username}
+        email={email}
+        onChange={onChange}
+        onCreate={onCreate}
+      />
+      <UserList users={users} />
     </>
   );
 }
