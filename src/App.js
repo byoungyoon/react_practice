@@ -1,67 +1,97 @@
 import React, {useRef, useState} from 'react';
-import UserList from './UserList';
 import CreateUser from './CreateUser';
+import UserList from './UserList';
 
 function App(){
-  const [inputs, setInputs] = useState({
-    username: '',
-    email: ''
-  });
+  const [inputs, setInputs] = useState(
+    {
+      userId: '',
+      userPw: ''
+    }
+  );
 
-  const {username, email} = inputs;
+  const {userId, userPw} = inputs;
 
   const onChange = (e) => {
-    const {name, value} = e.target;
-    setInputs({
-      ...inputs,
-      [name]: value
-    });
+    const {value, name} = e.target;
+    setInputs(
+      {
+        ...inputs,
+        [name]: value
+      }
+    )
   };
 
-  const [users, setUsers] = useState([
+  const [users, setUsers]=useState([
     {
-      id: 1,
-      username: 'velpert',
-      email: 'public.velopert@gmail.com'
+        id: 1,
+        userId: 'user1',
+        userPw: '1234',
+        active: true
     },
     {
-      id: 2,
-      username: 'tester',
-      email: 'tester@example.com'
+        id: 2,
+        userId: 'user2',
+        userPw: '1234',
+        active: false
     },
     {
-      id: 3,
-      username: 'liz',
-      email: 'liz@example.com'
+        id: 3,
+        userId: 'user3',
+        userPw: '1234',
+        active: false
     }
   ]);
 
-  const nextId = useRef(2);
-  const onCreate = () =>{
-    const user ={
+  const nextId = useRef(4);
+
+  const onCreate = () => {
+    const user = {
       id: nextId.current,
-      username,
-      email
-    };
-    setUsers([...users, user]);
+      userId: userId,
+      userPw: userPw
+    }
 
-    setInputs({
-      username: '',
-      email: ''
-    });
-
+    setUsers(
+      [
+        ...users,
+        user
+      ]
+    );
+    
     nextId.current += 1;
+    
+    setInputs(
+      {
+        userId: '',
+        userPw: ''
+      }
+    )
+  };
+
+  const onRemove = (id) => {
+    setUsers(
+      users.filter(data => data.id !== id)
+    );
+  };
+
+  const onToggle = (id) => {
+    setUsers(
+      users.map(data => (
+        data.id === id ? {...data, active: !data.active} : data
+      ))
+    );
   };
 
   return(
     <>
       <CreateUser 
-        username={username}
-        email={email}
+        userId={userId}
+        userPw={userPw}
         onChange={onChange}
         onCreate={onCreate}
       />
-      <UserList users={users} />
+      <UserList users={users} onRemove={onRemove} onToggle={onToggle} />
     </>
   );
 }
