@@ -1,6 +1,14 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+// useEffect : 처음 나타났을때, 사라질때, 업데이트 될때
 
-function User({user, onRemove, onToggle}){
+const User = React.memo(function User({user, onRemove, onToggle}){
+    useEffect(() => {
+        console.log('컴포넌트 나타남');
+        return() =>{
+            console.log('컴포넌트 없어짐');
+        }
+    }, []); 
+
     return(
         <div>
             <table>
@@ -28,7 +36,7 @@ function User({user, onRemove, onToggle}){
             </table>
         </div>
     );
-}
+});
 
 function UserList({users, onRemove, onToggle}){
     return(
@@ -42,4 +50,4 @@ function UserList({users, onRemove, onToggle}){
     );
 }
 
-export default UserList;
+export default React.memo(UserList);
